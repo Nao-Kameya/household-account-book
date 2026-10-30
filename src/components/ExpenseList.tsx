@@ -1,4 +1,4 @@
-import { Expense } from "../pages/ExpensePage"
+import type { Expense } from "../types/expense"
 import styles from "../styles/ExpenseList.module.css"
 
 type ExpenseListProps = {

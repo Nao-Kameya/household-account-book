@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { ROUTES } from "../ROUTES"
-import { State } from "../App"
+import type { State } from "../types/expense"
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
 
 type Props = {

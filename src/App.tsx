@@ -4,12 +4,9 @@ import GraphPage from "./pages/GraphPage"
 import ExpensePage from "./pages/ExpensePage"
 import "./App.css"
 import { ROUTES } from "./ROUTES"
-import { Expense } from "./pages/ExpensePage";
 import { useReducer, useState } from "react"
+import type { State, Action} from "./types/expense"
 
-export type State = {
-      expenses:Expense[]
-    }
 
 function App() {
 
@@ -24,11 +21,7 @@ function App() {
       expenses: []
     }
   
-    type Action = 
-    | {type: "ADD", payload: Expense}
-    | {type:"CHECK", payload: number}
-    | {type: "DELETE"}
-    | {type:"SET_ALL", payload: Expense[]}
+   
     
     const reducer = (state: State, action: Action) => {
       switch(action.type){
@@ -38,15 +31,14 @@ function App() {
             expenses: [...state.expenses, action.payload]
           }
         
-        case "CHECK":
+        case "UPDATE":
           return {
             ...state,
-            expenses: state.expenses.map((expense) => {
-              if(expense.id === action.payload){
-                return {...expense, checked: !expense.checked};
-              }
-              return expense;
-            })
+            expenses: state.expenses.map((expense) =>
+              expense.id === action.payload.id
+                ? action.payload
+                : expense
+            )
           }
   
         case "DELETE":
