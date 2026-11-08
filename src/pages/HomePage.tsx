@@ -4,6 +4,7 @@ import { signInWithPopup, signOut} from "firebase/auth"
 import type { User } from "firebase/auth"
 import { auth, googleProvider } from "../firebase"
 import { ROUTES } from "../ROUTES"
+import { fetchAuthUser } from "../api/auth"
 
 type HomePageProps = {
   user: User | null
@@ -51,6 +52,31 @@ export default function HomePage({ user }: HomePageProps) {
     }
   }
 
+  const handleCheckAuth = async () => {
+    if (!user || isProcessing) return
+
+    setError(null)
+    setIsProcessing(true)
+
+    try {
+      const data = await fetchAuthUser(user)
+
+      if (data.uid !== user.uid) {
+        throw new Error("ユーザーIDが一致しません")
+      }
+
+      window.alert("サーバーでの本人確認に成功しました")
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : "本人確認中にエラーが発生しました"
+      )
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
 
   return (
     <div>
@@ -61,6 +87,14 @@ export default function HomePage({ user }: HomePageProps) {
       {user ? (
         <>
           <p>{user.displayName ?? "ユーザー"}さん</p>
+
+          <button
+            type="button"
+            onClick={handleCheckAuth}
+            disabled={isProcessing}
+          >
+            {isProcessing ? "処理中..." : "サーバーで本人確認"}
+          </button>
 
           <button
             type="button"
